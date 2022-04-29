@@ -22,10 +22,10 @@ TAB				EQU     09H		; Constante que representa a tabulação horizontal.
 	
 FileNameSrc		DB		256 DUP (?)		; Nome do arquivo a ser lido.
 FileNameDst		DB		256 DUP (?)		; Nome do arquivo a ser criado.
-FileHandleSrc	DW		0				; Handler do arquivo a ser lido.
-FileHandleDst	DW		0				; Handler do arquivo a ser criado.
+FileHandleSrc		DW		0			; Handler do arquivo a ser lido.
+FileHandleDst		DW		0			; Handler do arquivo a ser criado.
 FileBuffer		DB		10 DUP (?)		; Buffer de leitura do arquivo.
-FileNameBuffer	DB		150 DUP (?)		; Buffer de leitura do arquivo de entrada.
+FileNameBuffer		DB		150 DUP (?)		; Buffer de leitura do arquivo de entrada.
 BufferAux		DB		256 DUP (?)		; Recebe string de cada linha.
 StringAux		DB		10 DUP (?)		; Recebe strings que correspondem a números.
 
@@ -38,18 +38,18 @@ Ignora			DB		0	; Flag que indica se uma linha deve ser ignorada.
 FoiInt			DB		0	; Flag que indica se um caractere da parte inteira do número foi lido.
 FoiDec			DB		0	; Flag que indica se um caractere da parte decimal do número foi lido.
 Acabou			DB		0	; Flag que indica se a leitura do arquivo de entrada foi encerrada.
-EspacoDps       DB      0   ; Flag que indica se existem espaços em branco entre os números da parte decimal.
+EspacoDps      		DB      	0   	; Flag que indica se existem espaços em branco entre os números da parte decimal.
 Arredonda		DB		0	; Flag que indica se o valor final será arredondado ou não.	
 
-ParteInteira	DW		0	; Variável que contabiliza a soma das partes inteiras dos números.
-ParteDecimal	DW		0	; Variável que contabiliza a soma das partes decimais dos números.
+ParteInteira		DW		0	; Variável que contabiliza a soma das partes inteiras dos números.
+ParteDecimal		DW		0	; Variável que contabiliza a soma das partes decimais dos números.
 IntAux			DW		0	; Variável que recebe as partes inteiras dos números.
 DecAux			DW 		0	; Variável que recebe as partes decimais dos números.
 Quotient		DW 		0	; Variável que recebe o quociente de uma divisão.
 Remainder		DW 		0	; Variável que recebe o resto de uma divisão.
 AuxA			DW		0	; Variável auxiliar usada na divisão para obter a média.
 AuxB			DW		0	; Variável auxiliar usada na divisão para obter a média.
-AuxC			DW      2 DUP (?) ; Variável auxiliar usada na divisão para obter a média.
+AuxC			DW     	 	2 DUP (?) ; Variável auxiliar usada na divisão para obter a média.
 AuxD			DW		0	; Variável auxiliar usada para decidir sobre arredondamento.
 
 Centena			DW		0	; Variável auxiliar que recebe o primeiro dígito da parte decimal da média.
@@ -67,9 +67,9 @@ sw_m			DW		0	; Variável auxiliar usada para converter um número em string.
 
 MsgPede			DB		"Nome do arquivo de entrada: ", 0
 MsgErroOpen		DB		CR,LF,"Erro na abertura do arquivo.", CR, LF, 0
-MsgErroCreate	DB		CR,LF,"Erro na criacao do arquivo.", CR, LF, 0
+MsgErroCreate		DB		CR,LF,"Erro na criacao do arquivo.", CR, LF, 0
 MsgErroRead		DB		CR,LF,"Erro na leitura do arquivo.", CR, LF, 0
-MsgErroWrite	DB		CR,LF,"Erro na escrita do arquivo.", CR, LF, 0
+MsgErroWrite		DB		CR,LF,"Erro na escrita do arquivo.", CR, LF, 0
 MsgCRLF			DB		CR, LF, 0
 MsgSoma			DB		"Soma: ",0
 MsgMedia		DB		"Media: ",0
@@ -79,7 +79,7 @@ MsgMedia		DB		"Media: ",0
 
 Inicio:
 
-	CALL	GetFileNameSrc
+	CALL		GetFileNameSrc
 	MOV		AL,0				; Realiza a abertura do arquivo texto de entrada com interrupção.
 	LEA		DX,FileNameSrc
 	MOV		AH,3DH
@@ -87,7 +87,7 @@ Inicio:
 	JNC		Continua			; Verifica se foi possível abrir o arquivo texto de entrada.
 	
 	LEA		BX,MsgErroOpen		; Informa que houve erro na abertura do arquivo texto de entrada.
-	CALL	printf_s
+	CALL		printf_s
 	
 	.exit	1					; Encerra o programa, pois houve erro na abertura do arquivo texto de entrada.
 	
@@ -97,15 +97,15 @@ Continua:
 	
 Continua1:
 
-	CALL	GetFileNameDst		; Obtém o nome do arquivo de saída.
+	CALL		GetFileNameDst		; Obtém o nome do arquivo de saída.
 	LEA		DX,FileNameDst
-	CALL	fcreate				; Cria ou substitui o arquivo de saída.
+	CALL		fcreate				; Cria ou substitui o arquivo de saída.
 	MOV		FileHandleDst,BX
 	JNC		Again				; Inicia a leitura do arquivo de entrada.
 	MOV		BX,FileHandleSrc
-	CALL	fclose				; Fecha o arquivo de entrada, pois houve erro na leitura.
+	CALL		fclose				; Fecha o arquivo de entrada, pois houve erro na leitura.
 	LEA		BX,MsgErroCreate
-	CALL	printf_s
+	CALL		printf_s
 	JMP		Final				; Encerra o programa.
 
 Again:							; Faz a leitura de um caractere por vez do arquivo de entrada.
@@ -118,7 +118,7 @@ Again:							; Faz a leitura de um caractere por vez do arquivo de entrada.
 	JNC		Continua2		; Verifica se houve erro de leitura.
 	
 	LEA		BX,MsgErroRead
-	CALL	printf_s
+	CALL		printf_s
 	
 	MOV		AL,1
 	JMP		ErroLeitura		; Encerra o programa, pois houve erro de leitura.
@@ -175,8 +175,8 @@ AnalisaBuffer:
 	CMP		Count,2			; Ignora números com mais caracteres do que o permitido.
 	JA		TrataInvalido
 	
-	CMP     EspacoDps,1     ; Verifica se existem espaços entre os números da parte decimal.
-	JE      TrataInvalido
+	CMP     	EspacoDps,1     ; Verifica se existem espaços entre os números da parte decimal.
+	JE      	TrataInvalido
 	
 	CMP		Separador,0		
 	JNE		TestaDps
@@ -192,14 +192,14 @@ TestaDps:
 	
 TestaEspaco:				; Verifica se existem espaços em branco entre os dígitos do número.
 
-	CMP 	FoiInt,1
+	CMP 		FoiInt,1
 	JNE		Again
 	CMP		Separador,0
 	JE		TrataInvalido
-	CMP     FoiDec,0
-	JE      TrataInvalido
-	MOV     EspacoDps,1
-	JMP     Again
+	CMP    		FoiDec,0
+	JE     	 	TrataInvalido
+	MOV     	EspacoDps,1
+	JMP    	 	Again
 	
 Reseta:
 
@@ -224,7 +224,7 @@ TrataDecimal:
 	JA		Reseta2
 
 	LEA		BX,BufferAux
-	CALL	atoi			; Converte a string em um valor numérico.
+	CALL		atoi			; Converte a string em um valor numérico.
 	
 	MOV		DecAux,AX
 	
@@ -246,7 +246,7 @@ EncerraLinha2:
 	CMP		Acabou,1		; Verifica se a leitura do arquivo de entrada acabou.
 	JE		CloseAndFinal
 	
-	JMP 	Reseta2			; Reinicia as flags para leitura de nova linha.
+	JMP 		Reseta2			; Reinicia as flags para leitura de nova linha.
 	
 SomaValores:
 
@@ -285,7 +285,7 @@ Reseta2:
 	MOV		Separador,0
 	MOV		FoiInt,0
 	MOV		FoiDec,0
-	MOV     EspacoDps,0
+	MOV     	EspacoDps,0
 	JMP		Again			; Continua a leitura do arquivo de entrada.
 
 TrataSeparador:
@@ -304,17 +304,17 @@ TrataInteiro:
 	MOV		byte ptr[BX],0
 
 	LEA		BX,BufferAux
-	CALL	atoi			; Converte a string em um valor numérico.
+	CALL		atoi			; Converte a string em um valor numérico.
 	
 	CMP		AX,500			; Verifica se o valor da parte inteira é maior do que o aceitável.
-	JNAE	TrataInteiro2	; Atualiza a soma das partes inteiras dos números.
+	JNAE		TrataInteiro2	; Atualiza a soma das partes inteiras dos números.
 	JMP		TrataInvalido	; Ignora o resto da linha.
 	
 TrataInteiro2:
 	
 	MOV		IntAux,AX
 	MOV		Count,0		; Reinicia o contador de posições do buffer auxiliar.
-	JMP 	Again		; Continua a leitura do arquivo de entrada.
+	JMP 		Again		; Continua a leitura do arquivo de entrada.
 	
 TrataInvalido:
 	
@@ -386,7 +386,7 @@ Testa2:
 	
 SaidaA:
 
-	CALL	ImprimeEspaco	; Faz a impressão no arquivo de saída, na formatação correta.
+	CALL		ImprimeEspaco	; Faz a impressão no arquivo de saída, na formatação correta.
 
 	CMP		IntAux,10
 	JB		Saida5
@@ -410,15 +410,15 @@ SaidaC:
 	
 	MOV		AX,ParInt		; Imprime o valor da paridade par da parte inteira na saída.
 	LEA		BX,StringAux
-	CALL	sprintf_w
+	CALL		sprintf_w
 	LEA		BX,StringAux
-	CALL	ImprimeString
+	CALL		ImprimeString
 	MOV		AX,ParDec		; Imprime o valor da paridade par da parte decimal na saída.
 	LEA		BX,StringAux
-	CALL	sprintf_w
+	CALL		sprintf_w
 	LEA		BX,StringAux
-	CALL	ImprimeString
-	CALL	QuebraLinha		; Realiza quebra de linha no arquivo de saída.
+	CALL		ImprimeString
+	CALL		QuebraLinha		; Realiza quebra de linha no arquivo de saída.
 	JMP		SomaValores
 
 Saida2:
@@ -431,10 +431,10 @@ Saida3:
 	
 Saida4:
 
-	MOV		AX,Numeracao	; Imprime a numeração de cada número no arquivo de saída.
-	LEA		BX,StringAux
+	MOV	AX,Numeracao	; Imprime a numeração de cada número no arquivo de saída.
+	LEA	BX,StringAux
 	CALL	sprintf_w
-	LEA		BX,StringAux
+	LEA	BX,StringAux
 	
 	CALL	ImprimeString	; Faz a impressão no arquivo de saída, na formatação correta.
 	CALL	ImprimeEspaco	; Faz a impressão no arquivo de saída, na formatação correta.
@@ -452,12 +452,12 @@ Saida6:
 	
 Saida7:
 
-	MOV		AX,IntAux		; Faz a impressão das partes inteiras dos números no arquivo de saída.
-	LEA		BX,StringAux
+	MOV	AX,IntAux		; Faz a impressão das partes inteiras dos números no arquivo de saída.
+	LEA	BX,StringAux
 	CALL	sprintf_w
-	LEA		BX,StringAux
+	LEA	BX,StringAux
 	CALL	ImprimeString	
-	JMP		SaidaB
+	JMP	SaidaB
 	
 Saida8:
 
@@ -467,23 +467,23 @@ Saida9:
 
 	MOV		AX,DecAux		; Faz a impressão das partes decimais dos números no arquivo de saída.
 	LEA		BX,StringAux
-	CALL	sprintf_w
+	CALL		sprintf_w
 	LEA		BX,StringAux
-	CALL	ImprimeString	
+	CALL		ImprimeString	
 	JMP		SaidaC
 	
 CloseAndFinal:
 	
-	CALL	ImprimeSoma			; Imprime a mensagem de soma no arquivo de saída.
+	CALL		ImprimeSoma			; Imprime a mensagem de soma no arquivo de saída.
 
 	MOV		AX,ParteInteira		; Imprime a soma total dos valores inteiros dos números no arquivo de saída.
 	LEA		BX,StringAux
-	CALL	sprintf_w
+	CALL		sprintf_w
 	
 	LEA		BX,StringAux
-	CALL	ImprimeString
+	CALL		ImprimeString
 	
-	CALL	ImprimeVirgula		; Faz a impressão no arquivo de saída, na formatação correta.
+	CALL		ImprimeVirgula		; Faz a impressão no arquivo de saída, na formatação correta.
 	
 	CMP		ParteDecimal,10
 	JB		Final_2
@@ -495,25 +495,25 @@ Final_2:
 	
 Final_3:
 
-	MOV		AX,ParteDecimal		; Imprime a soma total dos valores decimais dos números no arquivo de saída.
-	LEA		BX,StringAux
+	MOV	AX,ParteDecimal		; Imprime a soma total dos valores decimais dos números no arquivo de saída.
+	LEA	BX,StringAux
 	CALL	sprintf_w
-	LEA		BX,StringAux
+	LEA	BX,StringAux
 	CALL	ImprimeString
 	
 Final_4:
 	
 	CALL	QuebraLinha			; Realiza quebra de linha no arquivo de saída.
 	
-	LEA		BX,MsgMedia			; Imprime a mensagem de média no arquivo de saída.
+	LEA	BX,MsgMedia			; Imprime a mensagem de média no arquivo de saída.
 	CALL	ImprimeMedia
 	
 	CALL	Divide
 
-	MOV		BX,FileHandleSrc	; Fecha o arquivo de entrada.
+	MOV	BX,FileHandleSrc	; Fecha o arquivo de entrada.
 	CALL	fclose
 	
-	MOV		BX,FileHandleDst	; Fecha	o arquivo de saída.
+	MOV	BX,FileHandleDst	; Fecha	o arquivo de saída.
 	CALL	fclose
 	
 Final:
@@ -521,7 +521,7 @@ Final:
 	
 ErroEscrita:
 
-	LEA		BX, MsgErroWrite	
+	LEA	BX, MsgErroWrite	
 	CALL	printf_s
 	
 ErroLeitura:
@@ -537,7 +537,7 @@ ErroLeitura:
 GetFileNameSrc	proc	near				; Função para obter o nome do arquivo de entrada com o teclado.
 
 	LEA		BX,MsgPede						; Solicita o nome do arquivo de entrada ao usuário.
-	CALL	printf_s
+	CALL		printf_s
 
 	MOV		AH,0AH							; Obtém o nome do arquivo de entrada com o teclado.
 	LEA		DX,FileNameBuffer
@@ -665,7 +665,7 @@ printf_s	proc	near	; Função para receber uma string em BX e imprimi-la na tela
 	CMP		DL,0
 	JE		ps_1
 
-	PUSH	BX				; Faz a impressão com a interrupção correspondente.
+	PUSH		BX	; Faz a impressão com a interrupção correspondente.
 	MOV		AH,2
 	INT		21H
 	POP		BX
@@ -750,7 +750,7 @@ ImprimeEspaco	proc	near	; Função para imprimir um espaço em branco no arquivo
 
 	MOV		BX,FileHandleDst
 	MOV		DL,' '
-	CALL	setChar
+	CALL		setChar
 	JC		ErroEscrita			; Verifica se houve erro na escrita, para encerrar o programa.
 	RET
 	
@@ -762,7 +762,7 @@ ImprimeZero	proc	near	; Função para imprimir um zero no arquivo de saída.
 
 	MOV		BX,FileHandleDst
 	MOV		DL,'0'
-	CALL	setChar
+	CALL		setChar
 	JC		ErroEscrita		; Verifica se houve erro na escrita, para encerrar o programa.
 	RET
 	
@@ -786,7 +786,7 @@ ImprimeVirgula	proc	near	; Função para imprimir uma vírgula no arquivo de sa�
 
 	MOV		BX,FileHandleDst
 	MOV		DL,','
-	CALL	setChar
+	CALL		setChar
 	JC		ErroEscrita			; Verifica se houve erro na escrita, para encerrar o programa.
 	RET
 	
@@ -798,11 +798,11 @@ QuebraLinha	proc	near		; Função para realizar uma quebra de linha no arquivo d
 
 	MOV		BX,FileHandleDst	
 	MOV		DL,CR
-	CALL	setChar
+	CALL		setChar
 	JC		ErroEscrita	
 	MOV		BX,FileHandleDst
 	MOV		DL,LF
-	CALL	setChar
+	CALL		setChar
 	JC		ErroEscrita			; Verifica se houve erro na escrita, para encerrar o programa.
 	RET
 	
@@ -824,7 +824,7 @@ ImprimeString2:
 	INC		Count2
 	MOV		DL,AL
 	MOV		BX,FileHandleDst
-	CALL	setChar
+	CALL		setChar
 	JC		ErroEscrita			; Verifica se houve erro na escrita, para encerrar o programa.
 	JMP		ImprimeString2
 		
@@ -850,7 +850,7 @@ ImprimeSoma2:
 	INC		Count2
 	MOV		DL,AL
 	MOV		BX,FileHandleDst
-	CALL	setChar
+	CALL		setChar
 	JC		ErroEscrita			; Verifica se houve erro na escrita, para encerrar o programa.
 	JMP		ImprimeSoma2
 	
@@ -876,7 +876,7 @@ ImprimeMedia2:
 	INC		Count2
 	MOV		DL,AL
 	MOV		BX,FileHandleDst
-	CALL	setChar
+	CALL		setChar
 	JC		ErroEscrita			; Verifica se houve erro na escrita, para encerrar o programa.
 	JMP		ImprimeMedia2
 	
@@ -900,7 +900,7 @@ Divide		proc 	near
 	MOV		Quotient,AX
 	MOV		Remainder,DX	    ; Armazena o resto da divisão.
 	
-	MOV     AX,1000
+	MOV    	AX,1000
 	MUL     Remainder
 	MOV     AuxC,AX
 	MOV     AuxC+2,DX	
@@ -915,7 +915,7 @@ Divide		proc 	near
 	MOV		AuxB,AX
 	
 	MOV		AX,AuxB 		; Multiplica a parte fracionária por dez.
-	MOV     BX,10
+	MOV    		BX,10
 	MUL		BX
 	MOV		AuxB,AX
 	
@@ -925,7 +925,7 @@ Divide		proc 	near
 	DIV		BX
 	MOV		AuxB,AX
 	
-	MOV     AX,AuxA  	; Faz a soma entre AuxA e AuxB, e armazena o resultado em AuxA.
+	MOV     	AX,AuxA  	; Faz a soma entre AuxA e AuxB, e armazena o resultado em AuxA.
 	ADD		AX,AuxB
 	MOV		AuxA,AX
 	
@@ -936,22 +936,22 @@ Fim1:
 
 	MOV		AX,Quotient 	; Imprime a parte inteira do quociente e uma vírgula no arquivo de saída.
 	LEA		bx,StringAux
-	CALL	sprintf_w
+	CALL		sprintf_w
 	LEA		bx,StringAux
-	CALL	ImprimeString
-	CALL	ImprimeVirgula
+	CALL		ImprimeString
+	CALL		ImprimeVirgula
 	
-	CMP     FinalDec,10
+	CMP     	FinalDec,10
 	JAE		Fim2
-	CALL	ImprimeZero
+	CALL		ImprimeZero
 	
 Fim2:
 
 	MOV		AX,FinalDec		; Imprime a parte inteira decimal da média no arquivo de saída.
 	LEA		bx,StringAux
-	CALL	sprintf_w
+	CALL		sprintf_w
 	LEA		bx,StringAux
-	CALL	ImprimeString
+	CALL		ImprimeString
 	RET
 	
 SemNumeros:					; Considera que a média vale zero, pois nenhum número válido foi inserido.
@@ -979,7 +979,7 @@ AnalisaRound		proc 	near	; Função para analisar se o valor final será arredon
 	MUL     AuxD
 	CMP     AX,Numeracao
 	JB      AnalisaRoundFim
-	MOV		Arredonda,1
+	MOV	Arredonda,1
 	
 AnalisaRoundFim:
 
@@ -1011,17 +1011,17 @@ Round		proc 	near	; Função para arredondar o valor final da média, se necess�
 	MOV Centena,DX
 	MOV AuxA,AX
 
-	CMP	Unidade,5
+	CMPUnidade,5
 	JAE Arruma1
 	CMP Arredonda,1
-	JE	Arruma1
+	JEArruma1
 	JMP Round2
 	
 Arruma1:			; Tratamento de overflow do segundo dígito da parte decimal.
 
 	INC Dezena
 	CMP Dezena,10
-	JE	Arruma2
+	JEArruma2
 	JMP Round2
 	
 Arruma2:			; Tratamento de overflow do primeiro dígito da parte decimal.
@@ -1029,7 +1029,7 @@ Arruma2:			; Tratamento de overflow do primeiro dígito da parte decimal.
 	MOV Dezena,0
 	INC Centena
 	CMP Centena,10
-	JE 	Arruma3
+	JE Arruma3
 	JMP Round2
 	
 Arruma3:			; Tratamento de overflow da parte inteira do valor final da média.
